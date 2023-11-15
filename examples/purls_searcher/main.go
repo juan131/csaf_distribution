@@ -70,7 +70,10 @@ func newURLFinder(ids []string) *urlFinder {
 
 // clear resets the url finder after a run on an advisory.
 func (uf *urlFinder) clear() {
-	clear(uf.urls)
+	// TODO: replace with clear built-in function in Go 1.21 (https://pkg.go.dev/builtin#clear)
+	for i := range uf.urls {
+		uf.urls[i] = uf.urls[i][:0]
+	}
 }
 
 // dumpURLs dumps the found URLs to stdout.

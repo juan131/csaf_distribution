@@ -57,11 +57,23 @@ type forwarder struct {
 
 // newForwarder creates a new forwarder.
 func newForwarder(cfg *config) *forwarder {
-	queue := max(1, cfg.ForwardQueue)
+	queue := maxIntSlice(1, cfg.ForwardQueue)
 	return &forwarder{
 		cfg:  cfg,
 		cmds: make(chan func(*forwarder), queue),
 	}
+}
+
+// maxIntSlice returns the maximum value of a slice of integers.
+// TODO: replace with max built-in function in Go 1.21 (https://pkg.go.dev/builtin#max)
+func maxIntSlice(v1 int, vn ...int) (m int) {
+	m = v1
+	for _, x := range vn {
+		if x > m {
+			m = x
+		}
+	}
+	return
 }
 
 // run runs the forwarder. Meant to be used in a Go routine.
